@@ -196,10 +196,10 @@ static const CGFloat kDetailsLabelFontSize = 12.f;
 		self.backgroundColor = [UIColor clearColor];
 		// Make it invisible for now
 		self.alpha = 0.0f;
-		
+
 		taskInProgress = NO;
 		rotationTransform = CGAffineTransformIdentity;
-		
+
 		[self setupLabels];
 		[self updateIndicators];
 		[self registerForKVO];
@@ -252,8 +252,8 @@ static const CGFloat kDetailsLabelFontSize = 12.f;
         NSTimer *newGraceTimer = [NSTimer timerWithTimeInterval:self.graceTime target:self selector:@selector(handleGraceTimer:) userInfo:nil repeats:NO];
         [[NSRunLoop currentRunLoop] addTimer:newGraceTimer forMode:NSRunLoopCommonModes];
         self.graceTimer = newGraceTimer;
-	} 
-	// ... otherwise show the HUD imediately 
+	}
+	// ... otherwise show the HUD imediately
 	else {
 		[self showUsingAnimation:useAnimation];
 	}
@@ -267,10 +267,10 @@ static const CGFloat kDetailsLabelFontSize = 12.f;
 	if (self.minShowTime > 0.0 && showStarted) {
 		NSTimeInterval interv = [[NSDate date] timeIntervalSinceDate:showStarted];
 		if (interv < self.minShowTime) {
-			self.minShowTimer = [NSTimer scheduledTimerWithTimeInterval:(self.minShowTime - interv) target:self 
+			self.minShowTimer = [NSTimer scheduledTimerWithTimeInterval:(self.minShowTime - interv) target:self
 								selector:@selector(handleMinShowTimer:) userInfo:nil repeats:NO];
 			return;
-		} 
+		}
 	}
 	// ... otherwise hide the HUD immediately
 	[self hideUsingAnimation:useAnimation];
@@ -383,7 +383,7 @@ static const CGFloat kDetailsLabelFontSize = 12.f;
 - (void)showWhileExecuting:(SEL)method onTarget:(id)target withObject:(id)object animated:(BOOL)animated {
 	methodForExecution = method;
 	targetForExecution = MB_RETAIN(target);
-	objectForExecution = MB_RETAIN(object);	
+	objectForExecution = MB_RETAIN(object);
 	// Launch execution in new thread
 	self.taskInProgress = YES;
 	[NSThread detachNewThreadSelector:@selector(launchExecution) toTarget:self withObject:nil];
@@ -459,7 +459,7 @@ static const CGFloat kDetailsLabelFontSize = 12.f;
 	label.font = self.labelFont;
 	label.text = self.labelText;
 	[self addSubview:label];
-	
+
 	detailsLabel = [[UILabel alloc] initWithFrame:self.bounds];
 	detailsLabel.font = self.detailsLabelFont;
 	detailsLabel.adjustsFontSizeToFitWidth = NO;
@@ -474,10 +474,10 @@ static const CGFloat kDetailsLabelFontSize = 12.f;
 }
 
 - (void)updateIndicators {
-	
+
 	BOOL isActivityIndicator = [indicator isKindOfClass:[UIActivityIndicatorView class]];
 	BOOL isRoundIndicator = [indicator isKindOfClass:[MBRoundProgressView class]];
-	
+
 	if (mode == MBProgressHUDModeIndeterminate) {
 		if (!isActivityIndicator) {
 			// Update to indeterminate indicator
@@ -507,7 +507,7 @@ static const CGFloat kDetailsLabelFontSize = 12.f;
 		if (mode == MBProgressHUDModeAnnularDeterminate) {
 			[(MBRoundProgressView *)indicator setAnnular:YES];
 		}
-	} 
+	}
 	else if (mode == MBProgressHUDModeCustomView && customView != indicator) {
 		// Update custom view indicator
 		[indicator removeFromSuperview];
@@ -523,23 +523,23 @@ static const CGFloat kDetailsLabelFontSize = 12.f;
 
 - (void)layoutSubviews {
 	[super layoutSubviews];
-	
+
 	// Entirely cover the parent view
 	UIView *parent = self.superview;
 	if (parent) {
 		self.frame = parent.bounds;
 	}
 	CGRect bounds = self.bounds;
-	
+
 	// Determine the total widt and height needed
 	CGFloat maxWidth = bounds.size.width - 4 * margin;
 	CGSize totalSize = CGSizeZero;
-	
+
 	CGRect indicatorF = indicator.bounds;
 	indicatorF.size.width = MIN(indicatorF.size.width, maxWidth);
 	totalSize.width = MAX(totalSize.width, indicatorF.size.width);
 	totalSize.height += indicatorF.size.height;
-	
+
 	CGSize labelSize = MB_TEXTSIZE(label.text, label.font);
 	labelSize.width = MIN(labelSize.width, maxWidth);
 	totalSize.width = MAX(totalSize.width, labelSize.width);
@@ -548,7 +548,7 @@ static const CGFloat kDetailsLabelFontSize = 12.f;
 		totalSize.height += kPadding;
 	}
 
-	CGFloat remainingHeight = bounds.size.height - totalSize.height - kPadding - 4 * margin; 
+	CGFloat remainingHeight = bounds.size.height - totalSize.height - kPadding - 4 * margin;
 	CGSize maxSize = CGSizeMake(maxWidth, remainingHeight);
 	CGSize detailsLabelSize = MB_MULTILINE_TEXTSIZE(detailsLabel.text, detailsLabel.font, maxSize, detailsLabel.lineBreakMode);
 	totalSize.width = MAX(totalSize.width, detailsLabelSize.width);
@@ -556,10 +556,10 @@ static const CGFloat kDetailsLabelFontSize = 12.f;
 	if (detailsLabelSize.height > 0.f && (indicatorF.size.height > 0.f || labelSize.height > 0.f)) {
 		totalSize.height += kPadding;
 	}
-	
+
 	totalSize.width += 2 * margin;
 	totalSize.height += 2 * margin;
-	
+
 	// Position elements
 	CGFloat yPos = round(((bounds.size.height - totalSize.height) / 2)) + margin + yOffset;
 	CGFloat xPos = xOffset;
@@ -567,7 +567,7 @@ static const CGFloat kDetailsLabelFontSize = 12.f;
 	indicatorF.origin.x = round((bounds.size.width - indicatorF.size.width) / 2) + xPos;
 	indicator.frame = indicatorF;
 	yPos += indicatorF.size.height;
-	
+
 	if (labelSize.height > 0.f && indicatorF.size.height > 0.f) {
 		yPos += kPadding;
 	}
@@ -577,7 +577,7 @@ static const CGFloat kDetailsLabelFontSize = 12.f;
 	labelF.size = labelSize;
 	label.frame = labelF;
 	yPos += labelF.size.height;
-	
+
 	if (detailsLabelSize.height > 0.f && (indicatorF.size.height > 0.f || labelSize.height > 0.f)) {
 		yPos += kPadding;
 	}
@@ -586,7 +586,7 @@ static const CGFloat kDetailsLabelFontSize = 12.f;
 	detailsLabelF.origin.x = round((bounds.size.width - detailsLabelSize.width) / 2) + xPos;
 	detailsLabelF.size = detailsLabelSize;
 	detailsLabel.frame = detailsLabelF;
-	
+
 	// Enforce minsize and quare rules
 	if (square) {
 		CGFloat max = MAX(totalSize.width, totalSize.height);
@@ -599,18 +599,18 @@ static const CGFloat kDetailsLabelFontSize = 12.f;
 	}
 	if (totalSize.width < minSize.width) {
 		totalSize.width = minSize.width;
-	} 
+	}
 	if (totalSize.height < minSize.height) {
 		totalSize.height = minSize.height;
 	}
-	
+
 	size = totalSize;
 }
 
 #pragma mark BG Drawing
 
 - (void)drawRect:(CGRect)rect {
-	
+
 	CGContextRef context = UIGraphicsGetCurrentContext();
 	UIGraphicsPushContext(context);
 
@@ -618,7 +618,7 @@ static const CGFloat kDetailsLabelFontSize = 12.f;
 		//Gradient colours
 		size_t gradLocationsNum = 2;
 		CGFloat gradLocations[2] = {0.0f, 1.0f};
-		CGFloat gradColors[8] = {0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.75f}; 
+		CGFloat gradColors[8] = {0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.75f};
 		CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
 		CGGradientRef gradient = CGGradientCreateWithColorComponents(colorSpace, gradColors, gradLocations, gradLocationsNum);
 		CGColorSpaceRelease(colorSpace);
@@ -640,7 +640,7 @@ static const CGFloat kDetailsLabelFontSize = 12.f;
 		CGContextSetGrayFillColor(context, 0.0f, self.opacity);
 	}
 
-	
+
 	// Center HUD
 	CGRect allRect = self.bounds;
 	// Draw rounded HUD backgroud rect
@@ -715,15 +715,19 @@ static const CGFloat kDetailsLabelFontSize = 12.f;
 #pragma mark - Notifications
 
 - (void)registerForNotifications {
+#ifndef TARGET_OS_TV
 	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
 
 	[nc addObserver:self selector:@selector(statusBarOrientationDidChange:)
 			   name:UIApplicationDidChangeStatusBarOrientationNotification object:nil];
+#endif
 }
 
 - (void)unregisterFromNotifications {
+#ifndef TARGET_OS_TV
 	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
 	[nc removeObserver:self name:UIApplicationDidChangeStatusBarOrientationNotification object:nil];
+#endif
 }
 
 - (void)statusBarOrientationDidChange:(NSNotification *)notification {
@@ -752,16 +756,16 @@ static const CGFloat kDetailsLabelFontSize = 12.f;
 	UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
 	CGFloat radians = 0;
 	if (UIInterfaceOrientationIsLandscape(orientation)) {
-		if (orientation == UIInterfaceOrientationLandscapeLeft) { radians = -(CGFloat)M_PI_2; } 
+		if (orientation == UIInterfaceOrientationLandscapeLeft) { radians = -(CGFloat)M_PI_2; }
 		else { radians = (CGFloat)M_PI_2; }
 		// Window coordinates differ!
 		self.bounds = CGRectMake(0, 0, self.bounds.size.height, self.bounds.size.width);
 	} else {
-		if (orientation == UIInterfaceOrientationPortraitUpsideDown) { radians = (CGFloat)M_PI; } 
+		if (orientation == UIInterfaceOrientationPortraitUpsideDown) { radians = (CGFloat)M_PI; }
 		else { radians = 0; }
 	}
 	rotationTransform = CGAffineTransformMakeRotation(radians);
-	
+
 	if (animated) {
 		[UIView beginAnimations:nil context:nil];
 		[UIView setAnimationDuration:0.3];
@@ -810,11 +814,11 @@ static const CGFloat kDetailsLabelFontSize = 12.f;
 #pragma mark - Drawing
 
 - (void)drawRect:(CGRect)rect {
-	
+
 	CGRect allRect = self.bounds;
 	CGRect circleRect = CGRectInset(allRect, 2.0f, 2.0f);
 	CGContextRef context = UIGraphicsGetCurrentContext();
-	
+
 	if (_annular) {
 		// Draw background
 		BOOL isPreiOS7 = kCFCoreFoundationVersionNumber < kCFCoreFoundationVersionNumber_iOS_7_0;
@@ -918,11 +922,11 @@ static const CGFloat kDetailsLabelFontSize = 12.f;
 
 - (void)drawRect:(CGRect)rect {
 	CGContextRef context = UIGraphicsGetCurrentContext();
-	
+
 	CGContextSetLineWidth(context, 2);
 	CGContextSetStrokeColorWithColor(context,[_lineColor CGColor]);
 	CGContextSetFillColorWithColor(context, [_progressRemainingColor CGColor]);
-	
+
 	// Draw background
 	float radius = (rect.size.height / 2) - 2;
 	CGContextMoveToPoint(context, 2, rect.size.height/2);
@@ -933,7 +937,7 @@ static const CGFloat kDetailsLabelFontSize = 12.f;
 	CGContextAddLineToPoint(context, radius + 2, rect.size.height - 2);
 	CGContextAddArcToPoint(context, 2, rect.size.height - 2, 2, rect.size.height/2, radius);
 	CGContextFillPath(context);
-	
+
 	// Draw border
 	CGContextMoveToPoint(context, 2, rect.size.height/2);
 	CGContextAddArcToPoint(context, 2, 2, radius + 2, 2, radius);
@@ -943,26 +947,26 @@ static const CGFloat kDetailsLabelFontSize = 12.f;
 	CGContextAddLineToPoint(context, radius + 2, rect.size.height - 2);
 	CGContextAddArcToPoint(context, 2, rect.size.height - 2, 2, rect.size.height/2, radius);
 	CGContextStrokePath(context);
-	
+
 	CGContextSetFillColorWithColor(context, [_progressColor CGColor]);
 	radius = radius - 2;
 	float amount = self.progress * rect.size.width;
-	
+
 	// Progress in the middle area
 	if (amount >= radius + 4 && amount <= (rect.size.width - radius - 4)) {
 		CGContextMoveToPoint(context, 4, rect.size.height/2);
 		CGContextAddArcToPoint(context, 4, 4, radius + 4, 4, radius);
 		CGContextAddLineToPoint(context, amount, 4);
 		CGContextAddLineToPoint(context, amount, radius + 4);
-		
+
 		CGContextMoveToPoint(context, 4, rect.size.height/2);
 		CGContextAddArcToPoint(context, 4, rect.size.height - 4, radius + 4, rect.size.height - 4, radius);
 		CGContextAddLineToPoint(context, amount, rect.size.height - 4);
 		CGContextAddLineToPoint(context, amount, radius + 4);
-		
+
 		CGContextFillPath(context);
 	}
-	
+
 	// Progress in the right arc
 	else if (amount > radius + 4) {
 		float x = amount - (rect.size.width - radius - 4);
@@ -982,10 +986,10 @@ static const CGFloat kDetailsLabelFontSize = 12.f;
 		if (isnan(angle)) angle = 0;
 		CGContextAddArc(context, rect.size.width - radius - 4, rect.size.height/2, radius, -M_PI, angle, 1);
 		CGContextAddLineToPoint(context, amount, rect.size.height/2);
-		
+
 		CGContextFillPath(context);
 	}
-	
+
 	// Progress is in the left arc
 	else if (amount < radius + 4 && amount > 0) {
 		CGContextMoveToPoint(context, 4, rect.size.height/2);
@@ -995,7 +999,7 @@ static const CGFloat kDetailsLabelFontSize = 12.f;
 		CGContextMoveToPoint(context, 4, rect.size.height/2);
 		CGContextAddArcToPoint(context, 4, rect.size.height - 4, radius + 4, rect.size.height - 4, radius);
 		CGContextAddLineToPoint(context, radius + 4, rect.size.height/2);
-		
+
 		CGContextFillPath(context);
 	}
 }
