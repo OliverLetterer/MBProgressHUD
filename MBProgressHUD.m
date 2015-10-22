@@ -715,7 +715,7 @@ static const CGFloat kDetailsLabelFontSize = 12.f;
 #pragma mark - Notifications
 
 - (void)registerForNotifications {
-#ifndef TARGET_OS_TV
+#if !TARGET_OS_TV
 	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
 
 	[nc addObserver:self selector:@selector(statusBarOrientationDidChange:)
@@ -724,7 +724,7 @@ static const CGFloat kDetailsLabelFontSize = 12.f;
 }
 
 - (void)unregisterFromNotifications {
-#ifndef TARGET_OS_TV
+#if !TARGET_OS_TV
 	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
 	[nc removeObserver:self name:UIApplicationDidChangeStatusBarOrientationNotification object:nil];
 #endif
