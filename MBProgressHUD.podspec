@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
-  s.name         = "MBProgressHUD"
-  s.version      = "0.9.1.3"
+  s.name         = "MBProgressHUDFork"
+  s.version      = "1.0.0"
   s.summary      = "An iOS + tvOS activity indicator view."
   s.description  = <<-DESC
                     MBProgressHUD is an iOS drop-in class that displays a translucent HUD
@@ -12,7 +12,7 @@ Pod::Spec.new do |s|
   s.license      = { :type => 'MIT', :file => 'LICENSE' }
   s.author       = { 'Matej Bukovinski' => 'matej@bukovinski.com' }
   s.source       = { :git => "https://github.com/OliverLetterer/MBProgressHUD.git", :tag => s.version.to_s }
-  s.platforms    = { :ios => '8.0', :tvos => '9.0' }
+  s.platforms    = { :ios => '9.0', :tvos => '9.0' }
   s.source_files = '*.{h,m}'
   s.framework    = "CoreGraphics"
   s.requires_arc = true
